@@ -81,7 +81,7 @@ main.elf: $(OBJECTS)
 grbl.hex: main.elf
 	rm -f grbl.hex
 	avr-objcopy -j .text -j .data -O ihex main.elf grbl.hex
-	avr-objdump -h main.elf | grep .bss | ruby -e 'puts "\n\n--- Requires %s bytes of SRAM" % STDIN.read.match(/0[0-9a-f]+\s/)[0].to_i(16)'
+	avr-size main.elf | awk 'NR == 2 { print "\n\n--- Requires " $$3 " bytes of SRAM" }'
 	avr-size *.hex *.elf *.o
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.
